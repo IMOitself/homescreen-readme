@@ -90,6 +90,13 @@ public class MainActivity extends Activity {
 				readmeEdittext.setMovementMethod(new ScrollingMovementMethod());
 			}
 		});
+		
+		exitButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
 
 		editButton.setOnClickListener(new View.OnClickListener() {
 			@Override
