@@ -17,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,7 +28,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.concurrent.Executors;
 import org.eclipse.jgit.api.Git;
-import android.widget.ProgressBar;
 
 public class MainActivity extends Activity {
     final static String REPO_URL_KEY = "REPO_URL_KEY";
@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
 
     EditText repoLinkEdittext;
 
-	LinearLayout outputActionsLayout;
+	LinearLayout edittextActionsLayout;
 	CheckBox isLineWrapCheckbox;
 	Button editButton;
 	Button dailyQuoteButton;
@@ -58,22 +58,23 @@ public class MainActivity extends Activity {
         
         repoLinkEdittext = findViewById(R.id.repo_link_edittext);
 
-		outputActionsLayout = findViewById(R.id.output_actions_layout);
+		edittextActionsLayout = findViewById(R.id.edittext_actions_layout);
 		isLineWrapCheckbox = findViewById(R.id.is_linewrap_checkbox);
 		editButton = findViewById(R.id.edit_button);
 		dailyQuoteButton = findViewById(R.id.daily_quote_button);
 
-        readmeEdittext = findViewById(R.id.command_output_edittext);
+        readmeEdittext = findViewById(R.id.readme_edittext);
 		loadingBar = findViewById(R.id.loadingbar);
 		exitButton = findViewById(R.id.exit_button);
         
-		outputActionsLayout.setVisibility(View.GONE);
+		edittextActionsLayout.setVisibility(View.GONE);
 		dailyQuoteButton.setEnabled(false);
 		
 		readmeEdittext.setFocusable(false);
 		readmeEdittext.setFocusableInTouchMode(false);
 		
 		loadingBar.setVisibility(View.GONE);
+		loadingBar.setRotation(90);
         
         SharedPreferences sp = getSharedPreferences("hehe", Context.MODE_PRIVATE);
 		repositoryURL = sp.getString(REPO_URL_KEY, "");
@@ -199,7 +200,7 @@ public class MainActivity extends Activity {
 	void onAfterFetchReadme(String output){
 		readmeContent = output;
 		readmeEdittext.setText(output);
-		outputActionsLayout.setVisibility(View.VISIBLE);
+		edittextActionsLayout.setVisibility(View.VISIBLE);
 		readmeEdittext.setVisibility(View.VISIBLE);
 		loadingBar.setVisibility(View.GONE);
 		

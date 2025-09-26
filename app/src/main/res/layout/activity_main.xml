@@ -16,7 +16,7 @@
 		android:orientation="horizontal"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:id="@+id/output_actions_layout">
+		android:id="@+id/edittext_actions_layout">
 
 		<CheckBox
 			android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
 		android:typeface="monospace"
 		android:padding="8dp"
 		android:background="#0E000000"
-		android:id="@+id/command_output_edittext"
+		android:id="@+id/readme_edittext"
 		android:minHeight="16dp"
 		android:layout_weight="3"
 		android:hint="click to fetch README.md"/>
