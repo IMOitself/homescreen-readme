@@ -56,6 +56,14 @@
 		android:layout_weight="3"
 		android:hint="click to fetch README.md"/>
 
+	<ProgressBar
+		android:layout_width="match_parent"
+		style="?android:attr/progressBarStyleHorizontal"
+		android:layout_height="wrap_content"
+		android:layout_weight="3"
+		android:id="@+id/loadingbar"
+		android:indeterminate="true"/>
+
 	<Button
 		android:layout_width="match_parent"
 		style="?android:attr/buttonBarButtonStyle"

@@ -27,6 +27,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.concurrent.Executors;
 import org.eclipse.jgit.api.Git;
+import android.widget.ProgressBar;
 
 public class MainActivity extends Activity {
     final static String REPO_URL_KEY = "REPO_URL_KEY";
@@ -38,6 +39,7 @@ public class MainActivity extends Activity {
 	CheckBox isLineWrapCheckbox;
 	Button editButton;
 	Button dailyQuoteButton;
+	ProgressBar loadingBar;
 
     EditText readmeEdittext;
     Button exitButton;
@@ -62,6 +64,7 @@ public class MainActivity extends Activity {
 		dailyQuoteButton = findViewById(R.id.daily_quote_button);
 
         readmeEdittext = findViewById(R.id.command_output_edittext);
+		loadingBar = findViewById(R.id.loadingbar);
 		exitButton = findViewById(R.id.exit_button);
         
 		outputActionsLayout.setVisibility(View.GONE);
@@ -69,6 +72,8 @@ public class MainActivity extends Activity {
 		
 		readmeEdittext.setFocusable(false);
 		readmeEdittext.setFocusableInTouchMode(false);
+		
+		loadingBar.setVisibility(View.GONE);
         
         SharedPreferences sp = getSharedPreferences("hehe", Context.MODE_PRIVATE);
 		repositoryURL = sp.getString(REPO_URL_KEY, "");
@@ -144,6 +149,8 @@ public class MainActivity extends Activity {
         repositoryURL = repoLinkEdittext.getText().toString().trim();
 		if (! repositoryURL.startsWith("https://")) return;
 		
+		loadingBar.setVisibility(View.VISIBLE);
+		readmeEdittext.setVisibility(View.GONE);
 		readmeEdittext.setText("Please Wait...");
         fetchReadmeAsync(this, repositoryURL);
     }
@@ -193,6 +200,8 @@ public class MainActivity extends Activity {
 		readmeContent = output;
 		readmeEdittext.setText(output);
 		outputActionsLayout.setVisibility(View.VISIBLE);
+		readmeEdittext.setVisibility(View.VISIBLE);
+		loadingBar.setVisibility(View.GONE);
 		
 		final SharedPreferences.Editor spEditor = getSharedPreferences("hehe", Context.MODE_PRIVATE).edit();
 		spEditor.putString(WIDGET_STRING_KEY, output);
