@@ -49,12 +49,13 @@ public class MainActivity extends Activity {
 	boolean isInEditMode = false;
 	String repositoryURL;
     String readmeContent;
-	File readmeFile;
-
+	static MainActivity mainActivity;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+		mainActivity = this;
         
         repoLinkEdittext = findViewById(R.id.repo_link_edittext);
 
@@ -133,7 +134,7 @@ public class MainActivity extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						readmeEdittext.setFocusable(false);
 						readmeEdittext.setFocusableInTouchMode(false);
-						saveModifiedReadmeToFile(readmeEdittext.getText().toString());
+						GitTasks.saveModifiedReadmeToFile(readmeEdittext.getText().toString());
 						// TODO: commit README.md
 						// TODO: push to repository link
 						dailyQuoteButton.setEnabled(false);
@@ -153,50 +154,14 @@ public class MainActivity extends Activity {
 		loadingBar.setVisibility(View.VISIBLE);
 		readmeEdittext.setVisibility(View.GONE);
 		readmeEdittext.setText("Please Wait...");
-        fetchReadmeAsync(this, repositoryURL);
+		GitTasks.fetchReadme(this, repositoryURL, new GitTasks.AfterFetchReadme(){
+			@Override
+			public void run(String output){
+				onAfterFetchReadme(output);
+			}
+		});
     }
     
-	public void fetchReadmeAsync(final Context context, final String repoUrl) {
-		Executors.newSingleThreadExecutor().execute(new Runnable() {
-				@Override
-				public void run() {
-					fetchReadme(context, repoUrl);
-				}
-			});
-	}
-	
-	private void fetchReadme(final Context context, final String repoUrl){
-		File clonedRepoFolder = new File(context.getCacheDir(), "jgit-temp-" + System.currentTimeMillis());
-		String output = "";
-		try {
-			Git.cloneRepository()
-				.setURI(repoUrl)
-				.setDirectory(clonedRepoFolder)
-				.call().close();
-
-			readmeFile = new File(clonedRepoFolder, "README.md");
-			if (readmeFile.exists()) 
-				output = readFileToString(readmeFile);
-			else
-				output = "README.md not found.";
-
-		} catch (final Exception e) {
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-			output = sw.toString();
-
-		} finally {
-			final String finalOutput = output;
-			new Handler(Looper.getMainLooper()).post(new Runnable() {
-					@Override
-					public void run() {
-						onAfterFetchReadme(finalOutput);
-					}
-				});
-		}
-	}
-	
 	void onAfterFetchReadme(String output){
 		readmeContent = output;
 		readmeEdittext.setText(output);
@@ -220,39 +185,6 @@ public class MainActivity extends Activity {
         sendBroadcast(intent);
 		showToast("widget updated:D");
     }
-
-	private static String readFileToString(File file) throws IOException {
-		StringBuilder sb = new StringBuilder();
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		String line;
-		while ((line = reader.readLine()) != null) {
-			sb.append(line).append("\n");
-		}
-		reader.close();
-		return sb.toString();
-	}
-
-	private static void deleteRecursively(File fileOrDir) {
-		if (fileOrDir.isDirectory()) {
-			for (File child : fileOrDir.listFiles()) {
-				deleteRecursively(child);
-			}
-		}
-		fileOrDir.delete();
-	}
-	
-	void saveModifiedReadmeToFile(String modifiedReadme){
-		try {
-			PrintWriter writer = new PrintWriter(new FileWriter(readmeFile));
-            writer.print(modifiedReadme);
-            showToast("successfully saved to readme file");
-        } catch (IOException e) {
-            StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-            showToast(sw.toString());
-        }
-	}
 	
 	void showToast(String string){
 		Toast toast = Toast.makeText(MainActivity.this, string, Toast.LENGTH_SHORT);
@@ -263,8 +195,6 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		File clonedRepoFolder = readmeFile.getParentFile();
-		if (clonedRepoFolder.exists()) deleteRecursively(clonedRepoFolder);
-		
+		GitTasks.deleteClonedFolder();
 	}
 }
