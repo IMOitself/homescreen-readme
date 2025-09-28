@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     if(!isInFetchMode) return;
-					startFetchReadme();
+					startDownloadReadme();
 					isInFetchMode = false;
                 }
             });
@@ -147,22 +147,22 @@ public class MainActivity extends Activity {
 		});
     }
     
-    void startFetchReadme(){
+    void startDownloadReadme(){
         repositoryURL = repoLinkEdittext.getText().toString().trim();
 		if (! repositoryURL.startsWith("https://")) return;
 		
 		loadingBar.setVisibility(View.VISIBLE);
 		readmeEdittext.setVisibility(View.GONE);
 		readmeEdittext.setText("Please Wait...");
-		GitTasks.fetchReadme(this, repositoryURL, new GitTasks.AfterFetchReadme(){
+		GitTasks.downloadReadme(this, repositoryURL, new GitTasks.AfterDownloadReadme(){
 			@Override
 			public void run(String output){
-				onAfterFetchReadme(output);
+				onAfterDownloadReadme(output);
 			}
 		});
     }
     
-	void onAfterFetchReadme(String output){
+	void onAfterDownloadReadme(String output){
 		readmeContent = output;
 		readmeEdittext.setText(output);
 		edittextActionsLayout.setVisibility(View.VISIBLE);

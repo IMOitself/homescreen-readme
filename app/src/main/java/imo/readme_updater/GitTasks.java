@@ -19,15 +19,15 @@ import org.eclipse.jgit.api.Git;
 public class GitTasks {
     public static File readmeFile;
 	
-    public static void fetchReadme(final Context context, final String repoUrl, final AfterFetchReadme afterFetch){
+    public static void downloadReadme(final Context context, final String repoUrl, final AfterDownloadReadme afterDownload){
 		Executors.newSingleThreadExecutor().execute(new Runnable() {
 				@Override
 				public void run() {
-					fetchReadmeMain(context, repoUrl, afterFetch);
+					downloadReadmeMain(context, repoUrl, afterDownload);
 				}
 			});
 	}
-    private static void fetchReadmeMain(final Context context, final String repoUrl, final AfterFetchReadme afterFetch){
+    private static void downloadReadmeMain(final Context context, final String repoUrl, final AfterDownloadReadme afterDownload){
 		File clonedRepoFolder = new File(context.getCacheDir(), "jgit-temp-" + System.currentTimeMillis());
 		String output = "";
 		try {
@@ -53,7 +53,7 @@ public class GitTasks {
 			new Handler(Looper.getMainLooper()).post(new Runnable() {
 					@Override
 					public void run() {
-						afterFetch.run(finalOutput);
+						afterDownload.run(finalOutput);
 					}
 				});
 		}
@@ -70,7 +70,7 @@ public class GitTasks {
 		return sb.toString();
 	}
 	
-	interface AfterFetchReadme{
+	interface AfterDownloadReadme{
 		public void run(String output);
 	}
 	
