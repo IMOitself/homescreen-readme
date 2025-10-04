@@ -10,6 +10,7 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.Executors;
+import org.json.JSONObject;
 
 public class ReadmeTasks {
 
@@ -29,19 +30,23 @@ public class ReadmeTasks {
 	}
 	
     private static String getReadmeContentMain(final Context context, final String repoUrl) {
+		String repoUrlPrefix = "IMOitself/IMOitself";
+		String fileName = "README.md";
 		try {
-			StringBuilder content = new StringBuilder();
-            URL url = new URL("https://raw.githubusercontent.com/IMOitself/IMOitself/master/README.md");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
+            String defaultBranch = getDefaultBranch(repoUrlPrefix);
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                content.append(line).append("\n");
+            URL rawContentUrl = new URL("https://raw.githubusercontent.com/"+repoUrlPrefix+"/" + defaultBranch + "/" + fileName);
+            HttpURLConnection contentConnection = (HttpURLConnection) rawContentUrl.openConnection();
+            contentConnection.setRequestMethod("GET");
+
+            BufferedReader contentReader = new BufferedReader(new InputStreamReader(contentConnection.getInputStream()));
+            StringBuilder content = new StringBuilder();
+            String contentLine;
+            while ((contentLine = contentReader.readLine()) != null) {
+                content.append(contentLine).append("\n");
             }
-            reader.close();
-            connection.disconnect();
+            contentReader.close();
+            contentConnection.disconnect();
 			return content.toString();
 
         } catch (Exception e) {
@@ -54,5 +59,23 @@ public class ReadmeTasks {
 	
 	interface OnAfterFetch {
 		public void run(String output);
+	}
+	
+	private static String getDefaultBranch(String repoUrlPrefix) throws Exception {
+		URL apiUrl = new URL("https://api.github.com/repos/"+repoUrlPrefix);
+		HttpURLConnection apiConnection = (HttpURLConnection) apiUrl.openConnection();
+		apiConnection.setRequestMethod("GET");
+
+		BufferedReader apiReader = new BufferedReader(new InputStreamReader(apiConnection.getInputStream()));
+		StringBuilder apiResponse = new StringBuilder();
+		String apiLine;
+		while ((apiLine = apiReader.readLine()) != null) {
+			apiResponse.append(apiLine);
+		}
+		apiReader.close();
+		apiConnection.disconnect();
+
+		JSONObject jsonObject = new JSONObject(apiResponse.toString());
+		return jsonObject.getString("default_branch");
 	}
 }
