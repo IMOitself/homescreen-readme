@@ -108,6 +108,9 @@ public class MainActivity extends Activity {
 		editButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				if(true) return; // TODO: delete after fixing GitTasks.saveModifiedReadmeToFile()
+								 //       since readme file did not get downloaded now after fetching
+								 
 				// SWITCH TO EDIT MODE
 				if(! isInEditMode){
 					isInEditMode = !isInEditMode;
@@ -154,7 +157,7 @@ public class MainActivity extends Activity {
 		loadingBar.setVisibility(View.VISIBLE);
 		readmeEdittext.setVisibility(View.GONE);
 		readmeEdittext.setText("Please Wait...");
-		GitTasks.downloadReadme(this, repositoryURL, new GitTasks.AfterDownloadReadme(){
+		ReadmeTasks.getReadmeContent(this, repositoryURL, new ReadmeTasks.OnAfterFetch(){
 			@Override
 			public void run(String output){
 				onAfterDownloadReadme(output);
