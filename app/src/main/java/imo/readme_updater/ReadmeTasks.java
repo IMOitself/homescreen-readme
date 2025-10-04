@@ -10,6 +10,8 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.json.JSONObject;
 
 public class ReadmeTasks {
@@ -29,10 +31,10 @@ public class ReadmeTasks {
 			});
 	}
 	
-    private static String getReadmeContentMain(final Context context, final String repoUrl) {
-		String repoUrlPrefix = "IMOitself/IMOitself";
-		String fileName = "README.md";
+    private static String getReadmeContentMain(final Context context, String repoUrl) {
 		try {
+			String repoUrlPrefix = getRepoUrlPrefix(repoUrl);
+			String fileName = "README.md";
             String defaultBranch = getDefaultBranch(repoUrlPrefix);
 
             URL rawContentUrl = new URL("https://raw.githubusercontent.com/"+repoUrlPrefix+"/" + defaultBranch + "/" + fileName);
@@ -77,5 +79,14 @@ public class ReadmeTasks {
 
 		JSONObject jsonObject = new JSONObject(apiResponse.toString());
 		return jsonObject.getString("default_branch");
+	}
+	
+	private static String getRepoUrlPrefix(String repoUrl) throws Exception{
+		String regex = "https://github\\.com/([^/]+/[^/]+)";
+        Pattern pattern = Pattern.compile(regex);
+
+        Matcher matcher = pattern.matcher(repoUrl);
+		if (matcher.find()) return matcher.group(1);
+		else throw new Exception("url is not properly defined");
 	}
 }
