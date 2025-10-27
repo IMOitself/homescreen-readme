@@ -143,7 +143,7 @@ public class MarkdownRender {
 
 	public static void setSpanByWrapChar(SpannableStringBuilder sb, String wrapChar, SpanStyler styler) {
 		String pWrapChar = "\\Q" + wrapChar + "\\E";
-		String pString = "CHAR([^CHAR]+)CHAR";
+		String pString = "CHAR(.*?)CHAR";
 		pString = pString.replace("CHAR", pWrapChar);
 		
 		Pattern p = Pattern.compile(pString);
