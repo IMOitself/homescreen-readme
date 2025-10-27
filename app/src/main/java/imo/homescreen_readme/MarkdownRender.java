@@ -48,14 +48,19 @@ public class MarkdownRender {
 
 		SpannableStringBuilder sb = new SpannableStringBuilder(mdString);
 
+        // Block elements first
 		renderHeaders(sb);
-		renderBold(sb);
-		renderItalic(sb);
-		renderInlineCode(sb);
-		renderLinks(sb);
-		renderBullets(sb);
-		renderTables(sb);
-		renderLineSpacing(sb);
+        renderTables(sb);
+        renderBullets(sb);
+
+        // Inline elements
+        renderBold(sb);
+        renderItalic(sb);
+        renderInlineCode(sb);
+        renderLinks(sb);
+
+        // Line spacing last
+        renderLineSpacing(sb);
 		
 		tv.setTextColor(0xFFFFFFFF);
 		tv.setText(sb);
@@ -74,11 +79,7 @@ public class MarkdownRender {
 	}
 
 	private static void renderInlineCode(SpannableStringBuilder sb) {
-		//TODO: render inline code
-	}
-
-	private static void renderLineSpacing(SpannableStringBuilder sb) {
-		//TODO: render line spacing
+		//TODO: color #1E242A for inline code
 	}
 
 	private static void renderLinks(SpannableStringBuilder sb) {
