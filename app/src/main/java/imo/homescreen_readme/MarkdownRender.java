@@ -8,8 +8,10 @@ import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.TextView;
 import java.util.regex.Matcher;
@@ -53,8 +55,8 @@ public class MarkdownRender {
         // Inline elements
         renderBold(sb);
         renderItalic(sb);
-        renderInlineCode(sb);
         renderLinks(sb);
+        renderInlineCode(sb);
 		renderSubscript(sb);
 		renderSuperscript(sb);
 
@@ -121,8 +123,33 @@ public class MarkdownRender {
 	}
 
 	private static void renderLinks(SpannableStringBuilder sb) {
-		//TODO: text color #4493F8 for links
-	}
+	String[] patterns = {
+		"\\[!\\[(.*?)\\]\\(.*?\\)\\]\\(.*?\\)", 
+		"\\!\\[(.*?)\\]\\(.*?\\)",
+		"\\[([`\\[].*?)\\]\\(.*?\\)"};
+	
+    for (String pattern : patterns) {
+		Pattern p = Pattern.compile(pattern);
+		Matcher m = p.matcher(sb);
+		while (m.find()) {
+			int matchStart = m.start();
+			int matchEnd = m.end();
+
+			int group1Start = m.start(1);
+			int group1End = m.end(1);
+			
+			sb.setSpan(new RelativeSizeSpan(0f), 
+					matchStart, group1Start, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			sb.setSpan(new RelativeSizeSpan(0f), 
+					group1End, matchEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			
+			sb.setSpan(new ForegroundColorSpan(Color.parseColor("#4493F8")),
+					group1Start, group1End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			sb.setSpan(new UnderlineSpan(),
+					group1Start, group1End, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		}
+    }
+}
 
 	private static void renderSubscript(SpannableStringBuilder sb) {
 		setSpanByStartCharToLineEnd(sb, "<sub>", new SpanStyler() {
