@@ -6,9 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.View;
@@ -19,15 +18,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.concurrent.Executors;
-import org.eclipse.jgit.api.Git;
 
 public class MainActivity extends Activity {
     final static String REPO_URL_KEY = "REPO_URL_KEY";
@@ -116,6 +106,9 @@ public class MainActivity extends Activity {
 					readmeEdittext.requestFocus();
 					dailyQuoteButton.setEnabled(true);
 					editButton.setText("SAVE README.MD");
+					readmeEdittext.setText(readmeContent);
+					readmeEdittext.setBackgroundColor(Color.parseColor("#0E000000"));
+					readmeEdittext.setTextColor(Color.BLACK);
 					return;
 				}
 
@@ -147,6 +140,9 @@ public class MainActivity extends Activity {
 								@Override
 								public void run(String output){
 									readmeEdittext.setVisibility(View.VISIBLE);
+									readmeEdittext.setBackgroundColor(Color.parseColor("#0D1117"));
+									MarkdownRender.renderMarkdown(readmeEdittext, output);
+									
 									loadingBar.setVisibility(View.GONE);
 									editButton.setEnabled(true);
 							}
@@ -181,7 +177,9 @@ public class MainActivity extends Activity {
     
 	void onAfterDownloadReadme(String output){
 		readmeContent = output;
-		readmeEdittext.setText(output);
+		MarkdownRender.renderMarkdown(readmeEdittext, output);
+		readmeEdittext.setBackgroundColor(Color.parseColor("#0D1117"));
+		
 		edittextActionsLayout.setVisibility(View.VISIBLE);
 		readmeEdittext.setVisibility(View.VISIBLE);
 		loadingBar.setVisibility(View.GONE);
