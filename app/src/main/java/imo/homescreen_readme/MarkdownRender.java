@@ -140,6 +140,7 @@ public class MarkdownRender {
 			sb.setSpan(new URLSpan(url), ns, ne, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 			m = p.matcher(sb);
 		}
+		//TODO: text color #4493F8 for links
 	}
 
 	private static void applyBullets(SpannableStringBuilder sb) {
@@ -156,6 +157,8 @@ public class MarkdownRender {
 		}
 		if (sb.length() > 0 && sb.charAt(sb.length() - 1) == '\n') sb.delete(sb.length() - 1, sb.length());
 	}
+
+	//TODO: stroke color #3D444D for tables 
 }
 
 
