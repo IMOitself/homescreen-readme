@@ -49,13 +49,14 @@ public class MarkdownRender {
         // Block elements first
 		renderHeaders(sb);
         renderTables(sb);
-        renderBullets(sb);
 
         // Inline elements
         renderBold(sb);
         renderItalic(sb);
         renderInlineCode(sb);
         renderLinks(sb);
+		renderSubscript(sb);
+		renderSuperscript(sb);
 
         // Line spacing last
         renderLineSpacing(sb);
@@ -72,13 +73,9 @@ public class MarkdownRender {
 		//TODO: stroke color #3D444D for tables 
 	}
 
-	private static void renderBullets(SpannableStringBuilder sb) {
-		//TODO: render bullets
-	}
-
 
 	private static void renderBold(SpannableStringBuilder sb) {
-		setSpanAndRemoveWrapChar(sb, "**", new SpanStyler() {
+		setSpanByWrapChar(sb, "**", new SpanStyler() {
 			@Override
 			public void style(SpannableStringBuilder sb, int start, int end) {
 				sb.setSpan(new StyleSpan(Typeface.BOLD),
@@ -88,7 +85,7 @@ public class MarkdownRender {
 	}
 
 	private static void renderItalic(SpannableStringBuilder sb) {
-		setSpanAndRemoveWrapChar(sb, "*", new SpanStyler() {
+		setSpanByWrapChar(sb, "*", new SpanStyler() {
 			@Override
 			public void style(SpannableStringBuilder sb, int start, int end) {
 				sb.setSpan(new StyleSpan(Typeface.BOLD),
@@ -113,6 +110,14 @@ public class MarkdownRender {
 	private static void renderLinks(SpannableStringBuilder sb) {
 		//TODO: text color #4493F8 for links
 	}
+
+	private static void renderSubscript(SpannableStringBuilder sb) {
+		//TODO: render <sub>
+	}
+
+	private static void renderSuperscript(SpannableStringBuilder sb) {
+		//TODO: render <sup>
+	}
 	
 
 	private static void renderLineSpacing(SpannableStringBuilder sb) {
@@ -123,7 +128,7 @@ public class MarkdownRender {
 		void style(SpannableStringBuilder sb, int start, int contentLength);
 	}
 
-	public static void setSpanAndRemoveWrapChar(SpannableStringBuilder sb, String wrapChar, SpanStyler styler) {
+	public static void setSpanByWrapChar(SpannableStringBuilder sb, String wrapChar, SpanStyler styler) {
 		String pWrapChar = "\\Q" + wrapChar + "\\E";
 		String pString = "CHAR([^CHAR]+)CHAR";
 		pString = pString.replace("CHAR", pWrapChar);
