@@ -88,7 +88,13 @@ public class MarkdownRender {
 	}
 
 	private static void renderItalic(SpannableStringBuilder sb) {
-		//TODO: render italic
+		setSpanAndRemoveWrapChar(sb, "*", new SpanStyler() {
+			@Override
+			public void style(SpannableStringBuilder sb, int start, int end) {
+				sb.setSpan(new StyleSpan(Typeface.BOLD),
+            start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			}
+		});
 	}
 
 	private static void renderInlineCode(SpannableStringBuilder sb) {
