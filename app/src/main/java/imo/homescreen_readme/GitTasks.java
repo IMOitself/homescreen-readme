@@ -1,11 +1,10 @@
-package imo.readme_updater;
+package imo.homescreen_readme;
 
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Gravity;
 import android.widget.Toast;
-import imo.readme_updater.MainActivity;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;

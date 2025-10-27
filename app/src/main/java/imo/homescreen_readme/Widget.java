@@ -1,4 +1,4 @@
-package imo.readme_updater;
+package imo.homescreen_readme;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;

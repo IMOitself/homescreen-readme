@@ -5,8 +5,8 @@ android {
  buildToolsVersion "29.0.3"
 
  defaultConfig {
- applicationId "imo.readme_updater"
- minSdkVersion 26
+ applicationId "imo.homescreen_readme"
+ minSdkVersion 21
  targetSdkVersion 29
  versionCode 1
  versionName "1.0"

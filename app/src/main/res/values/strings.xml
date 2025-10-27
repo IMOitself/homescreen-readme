@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">imo.readme_updater</string>
+    <string name="app_name">imo.homescreen_readme</string>
     <string name="hello_world">Hello world!</string>
 
 </resources>
