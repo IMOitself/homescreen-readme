@@ -66,7 +66,20 @@ public class MarkdownRender {
 	}
 
 	private static void renderHeaders(SpannableStringBuilder sb) {
-		//TODO: render headers
+		String[] headerArray = {"#", "##", "###", "####", "#####", "######"};
+
+		for (final String header : headerArray) {
+			setSpanByStartCharToLineEnd(sb, header, new SpanStyler() {
+				@Override
+				public void style(SpannableStringBuilder sb, int start, int end) {
+					sb.setSpan(new StyleSpan(Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					float size = (header.length() == 1) ? 1.2f :
+						(header.length() == 2) ? 1.15f :
+						(header.length() == 3) ? 1.1f : 1.05f;
+					sb.setSpan(new RelativeSizeSpan(size), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				}
+			});
+		}
 	}
 
 	private static void renderTables(SpannableStringBuilder sb) {
@@ -143,6 +156,22 @@ public class MarkdownRender {
     			start, start + wrapChar.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 			sb.setSpan(new RelativeSizeSpan(0f),
     			end - wrapChar.length(), end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		}
+	}
+
+	public static void setSpanByStartCharToLineEnd(SpannableStringBuilder sb, String startChar, SpanStyler styler) {
+		String pWrapChar = "\\Q" + startChar + "\\E";
+		String pString = "CHAR.*";
+		pString = pString.replace("CHAR", pWrapChar);
+		
+		Pattern p = Pattern.compile(pString);
+    	Matcher m = p.matcher(sb);
+    	while (m.find()) {
+        	int start = m.start();
+        	int end = m.end();
+        	styler.style(sb, start, end);
+			sb.setSpan(new RelativeSizeSpan(0f),
+    			start, start + startChar.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		}
 	}
 
