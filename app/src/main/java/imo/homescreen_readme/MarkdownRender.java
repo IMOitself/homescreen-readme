@@ -125,11 +125,21 @@ public class MarkdownRender {
 	}
 
 	private static void renderSubscript(SpannableStringBuilder sb) {
-		//TODO: render <sub>
+		setSpanByStartCharToLineEnd(sb, "<sub>", new SpanStyler() {
+				@Override
+				public void style(SpannableStringBuilder sb, int start, int end) {
+					sb.setSpan(new RelativeSizeSpan(0.8f), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				}
+			});
 	}
 
 	private static void renderSuperscript(SpannableStringBuilder sb) {
-		//TODO: render <sup>
+		setSpanByStartCharToLineEnd(sb, "<sup>", new SpanStyler() {
+				@Override
+				public void style(SpannableStringBuilder sb, int start, int end) {
+					sb.setSpan(new RelativeSizeSpan(0.8f), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+				}
+			});
 	}
 	
 
