@@ -3,15 +3,11 @@ package imo.homescreen_readme;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Typeface;
+import android.graphics.Color;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.style.BulletSpan;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
-import android.text.style.TypefaceSpan;
-import android.text.style.URLSpan;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.LeadingMarginSpan;
 import android.view.View;
 import android.widget.TextView;
 import java.util.regex.Matcher;
@@ -21,7 +17,7 @@ public class MarkdownRender {
 	public static Bitmap renderMarkdownToBitmap(Context context, String mdString, int width, int maxHeight) {
 		TextView tv = new TextView(context);
 		tv.setTextColor(0xFF000000);
-		tv.setTextSize(14);
+		tv.setTextSize(16);
 		tv.setPadding(10, 10, 10, 10);
 		renderMarkdown(tv, mdString);
 
@@ -42,7 +38,7 @@ public class MarkdownRender {
 
 		return bmp;
 	}
-	
+
 	public static void renderMarkdown(TextView tv, String mdString) {
 		if (mdString == null) mdString = "";
 
@@ -61,7 +57,7 @@ public class MarkdownRender {
 
         // Line spacing last
         renderLineSpacing(sb);
-		
+
 		tv.setTextColor(0xFFFFFFFF);
 		tv.setText(sb);
 	}
@@ -79,7 +75,16 @@ public class MarkdownRender {
 	}
 
 	private static void renderInlineCode(SpannableStringBuilder sb) {
-		//TODO: color #1E242A for inline code
+		Pattern p = Pattern.compile("`([^`]+)`");
+    	Matcher m = p.matcher(sb);
+    	while (m.find()) {
+        	int start = m.start();
+        	int end = m.end();
+        	sb.setSpan(new BackgroundColorSpan(Color.parseColor("#1E242A")),
+                start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			sb.replace(start, start + 1, " ");
+			sb.replace(end - 1, end, " ");
+    	}
 	}
 
 	private static void renderLinks(SpannableStringBuilder sb) {
