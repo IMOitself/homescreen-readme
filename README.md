@@ -1,4 +1,4 @@
-# homescreen-widget
+# homescreen-readme
 
 **android app for displaying readme of a github repository directly on your home screen. this should help you get productive somehow, probably**
 
