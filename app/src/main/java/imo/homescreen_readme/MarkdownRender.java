@@ -59,7 +59,7 @@ public class MarkdownRender {
 		renderSuperscript(sb);
 
         // Line spacing last
-        renderLineSpacing(sb);
+        renderLineBreaks(sb);
 
 		tv.setTextColor(0xFFFFFFFF);
 		tv.setText(sb);
@@ -133,8 +133,10 @@ public class MarkdownRender {
 	}
 	
 
-	private static void renderLineSpacing(SpannableStringBuilder sb) {
-		//TODO: render <br> as line spacing
+	private static void renderLineBreaks(SpannableStringBuilder sb) {
+		int index;
+		while ((index = sb.toString().indexOf("<br>")) != -1) 
+			sb.replace(index, index + 4, "\n");
 	}
 
 	public interface SpanStyler {
