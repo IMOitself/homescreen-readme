@@ -107,10 +107,7 @@ public class MainActivity extends Activity {
 
 		editButton.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View v) {
-				if(true) return; // TODO: delete after fixing GitTasks.saveModifiedReadmeToFile()
-								 //       since readme file did not get downloaded now after fetching
-								 
+			public void onClick(View v) {	 
 				// SWITCH TO EDIT MODE
 				if(! isInEditMode){
 					isInEditMode = !isInEditMode;
@@ -137,9 +134,26 @@ public class MainActivity extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						readmeEdittext.setFocusable(false);
 						readmeEdittext.setFocusableInTouchMode(false);
-						GitTasks.saveModifiedReadmeToFile(readmeEdittext.getText().toString());
+						String modifiedReadme = readmeEdittext.getText().toString();
+						
+						loadingBar.setVisibility(View.VISIBLE);
+						readmeEdittext.setVisibility(View.GONE);
+						editButton.setEnabled(false);
+						GitTasks.saveModifiedReadmeToFile(
+							mainActivity, 
+							modifiedReadme, 
+							repositoryURL,
+							new GitTasks.AfterDownloadReadme(){
+								@Override
+								public void run(String output){
+									readmeEdittext.setVisibility(View.VISIBLE);
+									loadingBar.setVisibility(View.GONE);
+									editButton.setEnabled(true);
+							}
+						});
 						// TODO: commit README.md
 						// TODO: push to repository link
+						
 						dailyQuoteButton.setEnabled(false);
 						editButton.setText("EDIT README.MD");
 					}

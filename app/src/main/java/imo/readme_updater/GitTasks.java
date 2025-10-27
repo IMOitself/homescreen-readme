@@ -74,7 +74,21 @@ public class GitTasks {
 		public void run(String output);
 	}
 	
-	public static void saveModifiedReadmeToFile(String modifiedReadme){
+	public static void saveModifiedReadmeToFile(final Context context, final String modifiedReadme, final String repoUrl, final AfterDownloadReadme afterDownload){
+		if(readmeFile != null){
+			saveModifiedReadmeToFileMain(modifiedReadme);
+			return;
+		}
+		downloadReadme(context, repoUrl, new AfterDownloadReadme(){
+				@Override
+				public void run(String output){
+					saveModifiedReadmeToFileMain(modifiedReadme);
+					afterDownload.run(output);
+				}
+			});
+	}
+	
+	private static void saveModifiedReadmeToFileMain(String modifiedReadme){
 		try {
 			PrintWriter writer = new PrintWriter(new FileWriter(readmeFile));
             writer.print(modifiedReadme);
