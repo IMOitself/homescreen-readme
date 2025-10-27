@@ -1,6 +1,6 @@
-# readme-updater\*
+# homescreen-widget
 
-**android app for updating README.md directly on your home screen. this should help you get productive somehow, probably**
+**android app for displaying readme of a github repository directly on your home screen. this should help you get productive somehow, probably**
 
 <br>
 
@@ -20,9 +20,6 @@
 ✅ update widget
 ✅ remember widget content
 ✅ clone and get README.md
-⬜ commit locally
-⬜ git push
-⬜ scheduled daily quote 
 
 <br>
 
