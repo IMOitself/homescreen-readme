@@ -20,6 +20,7 @@
 ✅ update widget
 ✅ remember widget content
 ✅ clone and get README.md
+⬜ completely render markdown on widget
 
 <br>
 
