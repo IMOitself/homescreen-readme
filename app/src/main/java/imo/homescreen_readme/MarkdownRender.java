@@ -124,6 +124,7 @@ public class MarkdownRender {
 			sb.setSpan(new TypefaceSpan("monospace"), ns, ne, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 			m = p.matcher(sb);
 		}
+		//TODO: background color #1E242A for any code
 	}
 
 	private static void applyLinks(SpannableStringBuilder sb) {
