@@ -4,10 +4,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
-import android.text.style.LeadingMarginSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
 import java.util.regex.Matcher;
@@ -66,8 +68,23 @@ public class MarkdownRender {
 		//TODO: render headers
 	}
 
+	private static void renderTables(SpannableStringBuilder sb) {
+		//TODO: stroke color #3D444D for tables 
+	}
+
+	private static void renderBullets(SpannableStringBuilder sb) {
+		//TODO: render bullets
+	}
+
+
 	private static void renderBold(SpannableStringBuilder sb) {
-		//TODO: render bold
+		setSpanAndRemoveWrapChar(sb, "**", new SpanStyler() {
+			@Override
+			public void style(SpannableStringBuilder sb, int start, int end) {
+				sb.setSpan(new StyleSpan(Typeface.BOLD),
+            start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			}
+		});
 	}
 
 	private static void renderItalic(SpannableStringBuilder sb) {
@@ -90,18 +107,34 @@ public class MarkdownRender {
 	private static void renderLinks(SpannableStringBuilder sb) {
 		//TODO: text color #4493F8 for links
 	}
-
-	private static void renderBullets(SpannableStringBuilder sb) {
-		//TODO: render bullets
-	}
-
-	private static void renderTables(SpannableStringBuilder sb) {
-		//TODO: stroke color #3D444D for tables 
-	}
+	
 
 	private static void renderLineSpacing(SpannableStringBuilder sb) {
 		//TODO: render <br> as line spacing
 	}
+
+	public interface SpanStyler {
+		void style(SpannableStringBuilder sb, int start, int contentLength);
+	}
+
+	public static void setSpanAndRemoveWrapChar(SpannableStringBuilder sb, String wrapChar, SpanStyler styler) {
+		String pWrapChar = "\\Q" + wrapChar + "\\E";
+		String pString = "CHAR([^CHAR]+)CHAR";
+		pString = pString.replace("CHAR", pWrapChar);
+		
+		Pattern p = Pattern.compile(pString);
+    	Matcher m = p.matcher(sb);
+    	while (m.find()) {
+        	int start = m.start();
+        	int end = m.end();
+        	styler.style(sb, start, end);
+			sb.setSpan(new RelativeSizeSpan(0f),
+    			start, start + wrapChar.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			sb.setSpan(new RelativeSizeSpan(0f),
+    			end - wrapChar.length(), end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		}
+	}
+
 }
 
 
