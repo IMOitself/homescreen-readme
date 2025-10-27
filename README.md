@@ -20,7 +20,6 @@
 ✅ update widget
 ✅ remember widget content
 ✅ clone and get README.md
-⬜ daily quote creator
 ⬜ commit locally
 ⬜ git push
 ⬜ scheduled daily quote 
