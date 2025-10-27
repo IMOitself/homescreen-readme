@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.widget.RemoteViews;
 
 public class Widget extends AppWidgetProvider {
@@ -21,8 +22,11 @@ public class Widget extends AppWidgetProvider {
         
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
         views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
-        views.setTextViewText(R.id.widget_text, savedString);
-
+		int width = 500;
+		int height = 500;
+		Bitmap bmp = MarkdownRender.renderMarkdownToBitmap(context, savedString, width, height);
+		views.setImageViewBitmap(R.id.widget_image, bmp);
+		
         manager.updateAppWidget(appWidgetId, views);
     }
 

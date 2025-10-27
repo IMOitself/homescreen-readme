@@ -101,6 +101,7 @@ public class GitTasks {
 	}
 	
 	public static void deleteClonedFolder(){
+		if (readmeFile == null) return;
 		File clonedRepoFolder = GitTasks.readmeFile.getParentFile();
 		if (clonedRepoFolder.exists()) deleteRecursively(clonedRepoFolder);
 	}
