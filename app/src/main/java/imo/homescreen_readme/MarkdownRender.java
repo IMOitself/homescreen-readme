@@ -18,12 +18,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MarkdownRender {
-	public static Bitmap renderMarkdownToBitmap(Context ctx, String md, int width, int maxHeight) {
-		TextView tv = new TextView(ctx);
+	public static Bitmap renderMarkdownToBitmap(Context context, String mdString, int width, int maxHeight) {
+		TextView tv = new TextView(context);
 		tv.setTextColor(0xFF000000);
 		tv.setTextSize(14);
 		tv.setPadding(10, 10, 10, 10);
-		setMarkdown(tv, md);
+		renderMarkdown(tv, mdString);
 
 		int specW = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY);
 		int specH = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
@@ -43,122 +43,59 @@ public class MarkdownRender {
 		return bmp;
 	}
 	
-	public static void setMarkdown(TextView tv, String md) {
-		if (md == null) md = "";
+	public static void renderMarkdown(TextView tv, String mdString) {
+		if (mdString == null) mdString = "";
 
-		SpannableStringBuilder sb = new SpannableStringBuilder(md);
+		SpannableStringBuilder sb = new SpannableStringBuilder(mdString);
 
-		applyHeaders(sb);
-		applyBold(sb);
-		applyItalic(sb);
-		applyInlineCode(sb);
-		applyLinks(sb);
-		applyBullets(sb);
+		renderHeaders(sb);
+		renderBold(sb);
+		renderItalic(sb);
+		renderInlineCode(sb);
+		renderLinks(sb);
+		renderBullets(sb);
+		renderTables(sb);
+		renderLineSpacing(sb);
 		
 		tv.setTextColor(0xFFFFFFFF);
 		tv.setText(sb);
-		tv.setMovementMethod(LinkMovementMethod.getInstance());
-		tv.setHorizontallyScrolling(false);
-		tv.setLineSpacing(0.0f, 1.1f);
 	}
 
-	private static void applyHeaders(SpannableStringBuilder sb) {
-		Pattern p = Pattern.compile("(?m)^(#{1,6})\\s*(.+)$");
-		Matcher m = p.matcher(sb);
-		while (m.find()) {
-			String hashes = m.group(1);
-			String text = m.group(2);
-			int start = m.start();
-			int end = m.end();
-
-			sb.replace(start, end, text);
-			int newStart = start;
-			int newEnd = start + text.length();
-
-			sb.setSpan(new StyleSpan(Typeface.BOLD), newStart, newEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			float size = (hashes.length() == 1) ? 1.8f :
-				(hashes.length() == 2) ? 1.5f :
-				(hashes.length() == 3) ? 1.3f : 1.1f;
-			sb.setSpan(new RelativeSizeSpan(size), newStart, newEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			m = p.matcher(sb);
-		}
+	private static void renderHeaders(SpannableStringBuilder sb) {
+		//TODO: render headers
 	}
 
-	private static void applyBold(SpannableStringBuilder sb) {
-		Pattern p = Pattern.compile("\\*\\*(.+?)\\*\\*");
-		Matcher m = p.matcher(sb);
-		while (m.find()) {
-			String c = m.group(1);
-			int s = m.start();
-			int e = m.end();
-			sb.replace(s, e, c);
-			int ns = s, ne = s + c.length();
-			sb.setSpan(new StyleSpan(Typeface.BOLD), ns, ne, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			m = p.matcher(sb);
-		}
+	private static void renderBold(SpannableStringBuilder sb) {
+		//TODO: render bold
 	}
 
-	private static void applyItalic(SpannableStringBuilder sb) {
-		Pattern p = Pattern.compile("(?<!\\*)\\*(?!\\s)(.+?)(?<!\\s)\\*(?!\\*)");
-		Matcher m = p.matcher(sb);
-		while (m.find()) {
-			String c = m.group(1);
-			int s = m.start();
-			int e = m.end();
-			sb.replace(s, e, c);
-			int ns = s, ne = s + c.length();
-			sb.setSpan(new StyleSpan(Typeface.ITALIC), ns, ne, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			m = p.matcher(sb);
-		}
+	private static void renderItalic(SpannableStringBuilder sb) {
+		//TODO: render italic
 	}
 
-	private static void applyInlineCode(SpannableStringBuilder sb) {
-		Pattern p = Pattern.compile("`([^`]+)`");
-		Matcher m = p.matcher(sb);
-		while (m.find()) {
-			String c = m.group(1);
-			int s = m.start();
-			int e = m.end();
-			sb.replace(s, e, c);
-			int ns = s, ne = s + c.length();
-			sb.setSpan(new TypefaceSpan("monospace"), ns, ne, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			m = p.matcher(sb);
-		}
-		//TODO: background color #1E242A for any code
+	private static void renderInlineCode(SpannableStringBuilder sb) {
+		//TODO: render inline code
 	}
 
-	private static void applyLinks(SpannableStringBuilder sb) {
-		Pattern p = Pattern.compile("\\[([^\\]]+)\\]\\(([^)]+)\\)");
-		Matcher m = p.matcher(sb);
-		while (m.find()) {
-			String label = m.group(1);
-			String url = m.group(2);
-			int s = m.start();
-			int e = m.end();
-			sb.replace(s, e, label);
-			int ns = s, ne = s + label.length();
-			sb.setSpan(new URLSpan(url), ns, ne, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			m = p.matcher(sb);
-		}
+	private static void renderLineSpacing(SpannableStringBuilder sb) {
+		//TODO: render line spacing
+	}
+
+	private static void renderLinks(SpannableStringBuilder sb) {
 		//TODO: text color #4493F8 for links
 	}
 
-	private static void applyBullets(SpannableStringBuilder sb) {
-		Pattern p = Pattern.compile("(?m)^\\s*[-*]\\s+(.+)$");
-		Matcher m = p.matcher(sb);
-		while (m.find()) {
-			String c = m.group(1);
-			int s = m.start();
-			int e = m.end();
-			sb.replace(s, e, c + "\n");
-			int ns = s, ne = s + c.length();
-			sb.setSpan(new BulletSpan(20), ns, ne, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			m = p.matcher(sb);
-		}
-		if (sb.length() > 0 && sb.charAt(sb.length() - 1) == '\n') sb.delete(sb.length() - 1, sb.length());
+	private static void renderBullets(SpannableStringBuilder sb) {
+		//TODO: render bullets
 	}
 
-	//TODO: stroke color #3D444D for tables 
+	private static void renderTables(SpannableStringBuilder sb) {
+		//TODO: stroke color #3D444D for tables 
+	}
+
+	private static void renderLineSpacing(SpannableStringBuilder sb) {
+		//TODO: render <br> as line spacing
+	}
 }
 
 
