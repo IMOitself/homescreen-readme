@@ -171,6 +171,16 @@ public class MarkdownRender {
 	
 
 	private static void renderLineBreaks(SpannableStringBuilder sb) {
+		Pattern p = Pattern.compile("\n\n");
+		Matcher m = p.matcher(sb);
+
+		while (m.find()) {
+			int start = m.start();
+			int end = m.end();
+			sb.replace(start, end, "<br>");
+			m.reset(sb);
+		}
+		
 		int index;
 		while ((index = sb.toString().indexOf("<br>")) != -1) 
 			sb.replace(index, index + 4, "\n");
